@@ -15,6 +15,7 @@ Follow these steps:
 # Will generate some files that are directly added to the stage zone for the
 # next commit.
 git init
+git flow init
 dvc init
 
 # Add a remote for DVC, multiple remote types are available.
