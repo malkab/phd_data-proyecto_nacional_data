@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# ---------------------------
+#
+# Common settings for all contexts.
+#
+# ---------------------------
+#
+# Prefix variables with MLKC_.
+#
+# ---------------------------
+
+export MLKC_APP_NAME=proyecto_nacional_data
+export MLKC_NACIONAL_USER_PASSWORD=

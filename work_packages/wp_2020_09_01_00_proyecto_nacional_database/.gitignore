@@ -1,0 +1,3 @@
+data/000_in/*
+data/900_out/*
+docker_persistent_volumes/*
