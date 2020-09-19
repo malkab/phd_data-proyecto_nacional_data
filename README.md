@@ -4,7 +4,9 @@ The goal of this work package is to put again the Proyecto Nacional Data into pr
 
 Proyecto Nacional data contains a lot of information with all the data items computed at the Proyecto Nacional over the full cadastre.
 
+## IMPORTANT NOTICE!
 
+The DVC repo for this proyect was relocated after the last commit. It is now located at **malkab-phd-data/malkab-phd-data-proyecto_nacional_data**. Please repoint the DVC repo if this project is to be revisited.
 
 ## Workflow
 
