@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# ---------------------------
+#
+# Common settings for all contexts.
+#
+# ---------------------------
+#
+# Prefix variables with MLKC_.
+#
+# ---------------------------
+
+# -----
+# Instance ID
+# -----
+export MLKC_PHD_DATA_INSTANCE_NAME=kepler
+
+# -----
+# SSH
+# -----
+export MLKC_PHD_DATA_SSH_USER_NAME=$MLKC_KEPLER_USER
+export MLKC_PHD_DATA_SSH_HOST=$MLKC_KEPLER_HOST
+export MLKC_PHD_DATA_PEM=
+
+# -----
+# PostGIS
+# -----
+export MLKC_PHD_DATA_PG_EXTERNAL_PORT=5632
