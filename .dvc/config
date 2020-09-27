@@ -3,4 +3,4 @@
 [cache]
     local = storage
 ['remote "storage"']
-    url = /mnt/samsung_hdd_1_5tb/dvc_storage/malkab-phd-data
+    url = /mnt/samsung_hdd_1_5tb/dvc_storage/malkab-phd-data/malkab-phd-data-proyecto_nacional_data
