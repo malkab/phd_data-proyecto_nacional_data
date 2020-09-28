@@ -1,19 +1,24 @@
 #!/bin/bash
 
+# Version 2020-08-07
+
 # -----------------------------------------------------------------
 #
-# Cell network creation.
+# Stops the compose.
 #
 # -----------------------------------------------------------------
 #
-# Creates a Docker network.
+# Stops a compose in the current folder.
 #
 # -----------------------------------------------------------------
 
 # Check mlkcontext to check. If void, no check will be performed
 MATCH_MLKCONTEXT=common
-# Network name
-NETWORK=$MLKC_APP_NAME
+# Stop timeout
+TIMEOUT=10
+# Project name, can be blank. Take into account that the folder name
+# will be used, there can be name clashes
+PROJECT_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME
 
 
 
@@ -22,7 +27,6 @@ NETWORK=$MLKC_APP_NAME
 # ---
 
 # Check mlkcontext
-
 if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
 
   if [ ! "$(mlkcontext)" = "$MATCH_MLKCONTEXT" ] ; then
@@ -35,4 +39,10 @@ if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
 
 fi
 
-docker network create $NETWORK
+if [ ! -z "${PROJECT_NAME}" ] ; then
+
+  PROJECT_NAME="-p ${PROJECT_NAME}"
+
+fi
+
+docker-compose $PROJECT_NAME stop -t $TIMEOUT

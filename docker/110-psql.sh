@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# Version 2020-09-28
+
 # -----------------------------------------------------------------
 #
-# Document here the purpose of the script.
+# psql session to DB.
 #
 # -----------------------------------------------------------------
 #
@@ -21,11 +23,11 @@ NETWORK=$MLKC_PROYECTO_NACIONAL_APP_NAME
 # an interactive psql session. In case of passing a script, files
 # must exist at a mounted volume at the VOLUMES section.
 SCRIPT=
-COMMAND="create role nacional password '${MLKC_PROYECTO_NACIONAL_DATA_POSTGIS_PASSWORD}' login;"
+COMMAND=
 # Container name
-CONTAINER_NAME=
+CONTAINER_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME_psql
 # Container host name
-CONTAINER_HOST_NAME=
+CONTAINER_HOST_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME_psql
 # Work dir
 WORKDIR=/ext_src/
 # The version of Docker PG image to use
@@ -43,12 +45,11 @@ DB=postgres
 # Declare volumes, a line per volume, complete in source:destination
 # form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
 VOLUMES=(
-
-  $(pwd)/../src/:/ext_src/
-
+  $(pwd):/ext_src/
 )
 # Output to files. This will run the script silently and
-# output results and errors to out.txt and error.txt
+# output results and errors to out.txt and error.txt. Use only
+# if running a script or command (-f -c SCRIPT parameter).
 OUTPUT_FILES=false
 
 
@@ -56,6 +57,10 @@ OUTPUT_FILES=false
 
 
 # ---
+
+echo -------------
+echo WORKING AT $(mlkcontext)
+echo -------------
 
 # Check mlkcontext
 if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
@@ -70,9 +75,7 @@ if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
 
 fi
 
-
 if [ ! -z "${NETWORK}" ] ; then NETWORK="--network=${NETWORK}" ; fi
-
 
 if [ ! -z "${CONTAINER_NAME}" ] ; then
 
@@ -80,13 +83,11 @@ if [ ! -z "${CONTAINER_NAME}" ] ; then
 
 fi
 
-
 if [ ! -z "${CONTAINER_HOST_NAME}" ] ; then
 
   CONTAINER_HOST_NAME="--hostname=${CONTAINER_HOST_NAME}"
 
 fi
-
 
 VOLUMES_F=
 
@@ -100,13 +101,11 @@ if [ ! -z "${VOLUMES}" ] ; then
 
 fi
 
-
 if [ ! -z "${SCRIPT}" ] ; then
 
   SCRIPT="-f ${SCRIPT}"
 
 fi
-
 
 if [ ! -z "${COMMAND}" ] ; then
 
@@ -114,13 +113,11 @@ if [ ! -z "${COMMAND}" ] ; then
 
 fi
 
-
 if [ ! -z "${WORKDIR}" ] ; then
 
   WORKDIR="--workdir ${WORKDIR}"
 
 fi
-
 
 if [ "$OUTPUT_FILES" == "true" ] ; then
 
@@ -131,7 +128,6 @@ else
   OUTPUT_FILES=""
 
 fi
-
 
 eval    docker run -ti --rm \
           $NETWORK \
