@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2020-08-07
+# Version 2020-09-28
 
 # -----------------------------------------------------------------
 #
@@ -18,34 +18,34 @@ MATCH_MLKCONTEXT=common
 # The network to connect to. Remember that when attaching to the network
 # of an existing container (using container:name) the HOST is
 # "localhost"
-NETWORK=cell
+NETWORK=$MLKC_PROYECTO_NACIONAL_APP_NAME
 # These two options are mutually excluyent. Use null at both for
 # an interactive psql session. In case of passing a script, files
 # must exist at a mounted volume at the VOLUMES section.
-SCRIPT=
-COMMAND="create role nacional password '${MLKC_NACIONAL_ROLE_PASSWORD}';"
+SCRIPT=./export_municipio_csv.sql
+COMMAND=
 # Container name
-CONTAINER_NAME=$MLKC_PHD_DATA_APP_psql
+CONTAINER_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME_psql
 # Container host name
-CONTAINER_HOST_NAME=$MLKC_PHD_DATA_APP_psql
+CONTAINER_HOST_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME_psql
 # Work dir
-WORKDIR=/ext_src/
+WORKDIR=$(pwd)/scripts
 # The version of Docker PG image to use
 POSTGIS_DOCKER_TAG=gargantuan_giraffe
 # The host
-HOST=cell_raw_data
+HOST=$MLKC_PROYECTO_NACIONAL_DATA_HOST
 # The port
 PORT=5432
 # The user
-USER=postgres
+USER=nacional
 # The pass
-PASS=postgres
+PASS=$MLKC_PROYECTO_NACIONAL_DATA_POSTGIS_PASSWORD
 # The DB
-DB=postgres
+DB=datos_finales_proyecto_nacional
 # Declare volumes, a line per volume, complete in source:destination
 # form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
 VOLUMES=(
-  $(pwd):/ext_src/
+  $(pwd)/../:$(pwd)/../
 )
 # Output to files. This will run the script silently and
 # output results and errors to out.txt and error.txt. Use only
@@ -57,6 +57,10 @@ OUTPUT_FILES=false
 
 
 # ---
+
+echo -------------
+echo WORKING AT $(mlkcontext)
+echo -------------
 
 # Check mlkcontext
 if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then

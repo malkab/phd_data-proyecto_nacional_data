@@ -9,14 +9,14 @@
 # Prefix variables with MLKC_.
 #
 # ---------------------------
-
 export MLKC_PROYECTO_NACIONAL_APP_NAME=proyecto_nacional_data
 
 # -----
 # PostGIS
 # -----
 export MLKC_PROYECTO_NACIONAL_DATA_PG_EXTERNAL_PORT=5700
-export MLKC_PROYECTO_NACIONAL_DATA_POSTGIS_PASSWORD=postgres
+export MLKC_PROYECTO_NACIONAL_DATA_POSTGRES_PASSWORD=postgres
+export MLKC_PROYECTO_NACIONAL_DATA_NACIONAL_PASSWORD=postgres
 export MLKC_PROYECTO_NACIONAL_DATA_HOST=proyecto_nacional_data_postgis
 
 # PG Config for 64GB RAM, 8 CPU, SSD

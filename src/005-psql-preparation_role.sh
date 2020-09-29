@@ -18,34 +18,34 @@ MATCH_MLKCONTEXT=
 # The network to connect to. Remember that when attaching to the network
 # of an existing container (using container:name) the HOST is
 # "localhost"
-NETWORK=$MLKC_PROYECTO_NACIONAL_APP_NAME
+NETWORK=
 # These two options are mutually excluyent. Use null at both for
 # an interactive psql session. In case of passing a script, files
 # must exist at a mounted volume at the VOLUMES section.
 SCRIPT=
-COMMAND=
+COMMAND="create role nacional password '${MLKC_PROYECTO_NACIONAL_DATA_NACIONAL_PASSWORD}';"
 # Container name
-CONTAINER_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME_psql
+CONTAINER_NAME=$MLKC_PHD_DATA_APP_psql
 # Container host name
-CONTAINER_HOST_NAME=$MLKC_PROYECTO_NACIONAL_APP_NAME_psql
+CONTAINER_HOST_NAME=$MLKC_PHD_DATA_APP_psql
 # Work dir
-WORKDIR=$(pwd)
+WORKDIR=/ext_src/
 # The version of Docker PG image to use
 POSTGIS_DOCKER_TAG=gargantuan_giraffe
 # The host
 HOST=$MLKC_PROYECTO_NACIONAL_DATA_HOST
 # The port
-PORT=5432
+PORT=$MLKC_PROYECTO_NACIONAL_DATA_PG_EXTERNAL_PORT
 # The user
 USER=postgres
 # The pass
-PASS=$MLKC_PROYECTO_NACIONAL_DATA_POSTGIS_PASSWORD
+PASS=$MLKC_PROYECTO_NACIONAL_DATA_POSTGRES_PASSWORD
 # The DB
 DB=postgres
 # Declare volumes, a line per volume, complete in source:destination
 # form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
 VOLUMES=(
-  $(pwd)/../:$(pwd)/../
+  $(pwd):/ext_src/
 )
 # Output to files. This will run the script silently and
 # output results and errors to out.txt and error.txt. Use only

@@ -4,6 +4,5 @@ data/000_in/*
 data/900_out/*
 # Added by mlkcontext
 # -------------------
-src/005-psql-preparation_role.sh
 docker/config/postgis/postgresql.conf
 # -------------------

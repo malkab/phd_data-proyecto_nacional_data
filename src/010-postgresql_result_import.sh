@@ -13,24 +13,24 @@
 # -----------------------------------------------------------------
 
 # Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=common
+MATCH_MLKCONTEXT=
 # Dump name to restore, including any folder, relative to this script's
 # folder
 DUMP_NAME=../data/900_out/20200901_063604_proyecto_nacional
 # The network to connect to. Remember that when attaching to the network
 # of an existing container (using container:name) the HOST is
 # "localhost"
-NETWORK=cell
+NETWORK=
 # Admin DB
 ADMIN_DB=postgres
 # Host
-HOST=main_cell_db
+HOST=$MLKC_PROYECTO_NACIONAL_DATA_HOST
 # Port
-PORT=5432
+PORT=$MLKC_PROYECTO_NACIONAL_DATA_PG_EXTERNAL_PORT
 # User
 USER=postgres
 # Pass
-PASS=postgres
+PASS=$MLKC_PROYECTO_NACIONAL_DATA_POSTGRES_PASSWORD
 # The version of Docker PG image to use
 POSTGIS_DOCKER_TAG=gargantuan_giraffe
 # Container name
