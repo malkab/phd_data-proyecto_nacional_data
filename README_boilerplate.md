@@ -39,6 +39,7 @@ dvc config cache.local storage
 # .gitignore.
 # For each folder or file added, a .dvc file is created and that needs to be
 # commited.
+dvc status
 dvc add data
 
 # Push
@@ -50,3 +51,8 @@ git push
 git pull
 dvc pull
 ```
+
+
+## Dropping DVC-Tracked Data
+
+DVC-tracked data can be safely dropped. **dvc status** will label them as **deleted**, but can't be commited.
