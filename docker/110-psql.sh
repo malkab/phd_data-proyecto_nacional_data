@@ -39,7 +39,7 @@ PORT=5432
 # The user
 USER=postgres
 # The pass
-PASS=$MLKC_PROYECTO_NACIONAL_DATA_POSTGIS_PASSWORD
+PASS=$MLKC_PROYECTO_NACIONAL_DATA_POSTGRES_PASSWORD
 # The DB
 DB=postgres
 # Declare volumes, a line per volume, complete in source:destination

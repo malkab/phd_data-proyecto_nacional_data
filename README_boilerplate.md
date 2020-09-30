@@ -2,9 +2,16 @@
 
 This is the template folder for a data science project in GIT.
 
+
 ## Big Data: Set DVC
 
-Use DVC for storing big data assets.
+Use DVC for storing big data assets. The pattern is to be very atomic regarding data assets, follow this guidelines:
+
+- as a general rule, don't add to DVC whole folders like **data**, **000_in**, or **900_out**. Be more selective, specially in the case of very large files. Add them individually;
+
+- folders that sum up a set of data that works together may be added as a folder.
+
+This allows for a more atomic retrieval of data when needed.
 
 When deciding the remote, using a common remote for several repos has the advantage of reducing remote size if those repos share data, but it's detrimental toward flexibility of moving and storing data for idle repos in other storage media. So, when a set of repos will share a big deal of data (for example, PhD), use the same remote for all repos, and use different ones in all the other cases.
 
