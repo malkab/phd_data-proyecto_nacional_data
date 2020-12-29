@@ -3,4 +3,3 @@ docker_persistent_volumes/*
 # Added by mlkcontext
 # -------------------
 docker/config/postgis/postgresql.conf
-# -------------------
