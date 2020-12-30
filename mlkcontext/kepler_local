@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# ---------------------------
+#
+# Common settings for all contexts.
+#
+# ---------------------------
+#
+# Prefix variables with MLKC_.
+#
+# ---------------------------
+export MLKC_PROYECTO_NACIONAL_NETWORK=
+
+# -----
+# PostGIS
+# -----
+export MLKC_PROYECTO_NACIONAL_DATA_PG_HOST=192.168.1.52
+export MLKC_PROYECTO_NACIONAL_DATA_PG_PORT=5632
+export MLKC_PROYECTO_NACIONAL_DATA_PG_PASS=$MLKC_SYSTEM_KEPLER_PG_PASS
+export MLKC_PROYECTO_NACIONAL_DATA_PG_PASS_CELL_READONLY=$MLKC_SYSTEM_KEPLER_PG_PASS_CELL_READONLY

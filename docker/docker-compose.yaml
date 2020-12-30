@@ -1,0 +1,23 @@
+version: '3.5'
+
+networks:
+  proyecto_nacional_data:
+    name: ${MLKC_PROYECTO_NACIONAL_APP_NAME}
+
+services:
+  proyecto_nacional_data_postgis:
+    image: malkab/postgis:gargantuan_giraffe
+    container_name: ${MLKC_PROYECTO_NACIONAL_APP_NAME}_postgis_dev
+
+    environment:
+      - PASSWORD=${MLKC_PROYECTO_NACIONAL_DATA_POSTGIS_PASSWORD}
+
+    networks:
+      - proyecto_nacional_data
+
+    ports:
+      - "${MLKC_PROYECTO_NACIONAL_DATA_PG_EXTERNAL_PORT}:5432"
+
+    volumes:
+      - ../docker_persistent_volumes/postgis:/data
+      - ./config/postgis/postgresql.conf:/default_confs/postgresql.conf

@@ -10,6 +10,11 @@ Proyecto Nacional data contains a lot of information with all the data items com
 The DVC repo for this proyect was relocated after the last commit. It is now located at **malkab-phd-data/malkab-phd-data-proyecto_nacional_data**. Please repoint the DVC repo if this project is to be revisited.
 
 
+## Restoring the Database
+
+The database needs an user called **nacional** and another called **cell_readonly**.
+
+
 ## Workflow
 
 This was the initial data file recovered from legacy stuff:
@@ -22,7 +27,7 @@ This file has been recovered by a **9.6** (candid_candice?) Docker container and
 5d4f8f1880ed47e95ea6d04986a0b454affcdab63fb7bb76c56e2381585c63b8 (sha256sum)
 20200702-203247-datos_finales_proyecto-proyecto_nacional_data
 
-This dump has been imported into a **12.3**, reexporting again to create the final product (stored at **malkab-phd-data/data/000-in**):
+This dump has been imported into a **12.3**, reexporting again to create the final product at **data/100_out**:
 
 146d004d80feb5e699dcee217e049d3c31b219aad6c0a0bc7a2f20e1fac73e7d (sha256sum)
 20200901_063604_proyecto_nacional

@@ -2,8 +2,16 @@ name: malkab-phd-data-proyecto_nacional_data
 root: /home/git/malkab-phd-data/malkab-phd-data-proyecto_nacional_data/
 
 windows:
-  - workpackages: >
+  - psql: >
+      clear ;
+      sleep 7 ;
       . mlkcontext common ;
       cd docker ;
+      ./110-psql.sh
+
+  - postgis: >
+      clear ;
       sleep 0.1 ;
-      clear
+      . mlkcontext common ;
+      cd docker ;
+      ./010-compose_up.sh
