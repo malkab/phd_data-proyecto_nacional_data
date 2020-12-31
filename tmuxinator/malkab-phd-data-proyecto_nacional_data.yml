@@ -4,14 +4,12 @@ root: /home/git/malkab-phd-data/malkab-phd-data-proyecto_nacional_data/
 windows:
   - psql: >
       clear ;
-      sleep 7 ;
+      sleep 2 ;
       . mlkcontext common ;
-      cd docker ;
-      ./110-psql.sh
+      cd docker
 
   - postgis: >
       clear ;
       sleep 0.1 ;
       . mlkcontext common ;
-      cd docker ;
-      ./010-compose_up.sh
+      cd docker
