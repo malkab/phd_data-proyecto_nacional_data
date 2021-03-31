@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2020-09-28
+# Version: 2021-03-30
 
 # -----------------------------------------------------------------
 #
@@ -8,49 +8,58 @@
 #
 # -----------------------------------------------------------------
 #
-# Creates a volatile PostGIS container to either create an interactive
-# psql session or run a SQL script with the same client.
+# Creates a volatile PostGIS container to either create an interactive psql
+# session or run a SQL script with the same client.
 #
 # -----------------------------------------------------------------
-
-# Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=
-# The network to connect to. Remember that when attaching to the network
-# of an existing container (using container:name) the HOST is
-# "localhost"
+# Check mlkctxt to check. If void, no check will be performed. If NOTNULL,
+# any activated context will do, but will fail if no context was activated.
+MATCH_MLKCTXT=NOTNULL
+# The network to connect to. Remember that when attaching to the network of an
+# existing container (using container:name) the HOST is "localhost". Also the
+# host network can be connected using just "host".
 NETWORK=$MLKC_PROYECTO_NACIONAL_NETWORK
-# These two options are mutually excluyent. Use null at both for
-# an interactive psql session. In case of passing a script, files
-# must exist at a mounted volume at the VOLUMES section.
+# These two options are mutually exclusive. Use null at both for an interactive
+# psql session. In case of passing a script, files must exist at a mounted
+# volume at the VOLUMES section, referenced by a full path. By default, the
+# script will be search at WORKDIR. For psql commands, escape "\" as in "\\\l".
 SCRIPT=
 COMMAND=
-# Container name
-CONTAINER_NAME=
-# Container host name
-CONTAINER_HOST_NAME=
-# Work dir
+# Container identifier root. This is used for both the container name (adding an
+# UID to avoid clashing) and the container host name (without UID). Incompatible
+# with NETWORK container:name option. If blank, a Docker engine default name
+# will be assigned to the container.
+ID_ROOT=
+# Unique? If true, no container with the same name can be created. Defaults to
+# true.
+UNIQUE=
+# Work dir. Use $(pwd) paths. Defaults to /.
 WORKDIR=$(pwd)/../src/
-# The version of Docker PG image to use
-POSTGIS_DOCKER_TAG=gargantuan_giraffe
-# The host
+# The version of PG to use. Defaults to latest.
+PG_DOCKER_TAG=
+# The host, defaults to localhost.
 HOST=$MLKC_PROYECTO_NACIONAL_DATA_PG_HOST
-# The port
+# The port, defaults to 5432.
 PORT=$MLKC_PROYECTO_NACIONAL_DATA_PG_PORT
-# The user
+# The user, defaults to postgres.
 USER=cell_master
-# The pass
+# The pass, defaults to postgres.
 PASS=$MLKC_PROYECTO_NACIONAL_DATA_PG_PASS_CELL_MASTER
-# The DB
+# The DB, defaults to postgres.
 DB=datos_finales_proyecto_nacional
-# Declare volumes, a line per volume, complete in source:destination
-# form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
+# Declare volumes, a line per volume, complete in source:destination form. No
+# strings needed, $(pwd)/../data/:/ext_src/ works perfectly. Defaults to ().
 VOLUMES=(
   $(pwd)/../:$(pwd)/../
 )
-# Output to files. This will run the script silently and
-# output results and errors to out.txt and error.txt. Use only
-# if running a script or command (-f -c SCRIPT parameter).
-OUTPUT_FILES=false
+# Output to files. This will run the script silently and output results and
+# errors to $OUTPUT_FILES_results.txt and $OUTPUT_FILES_errors.txt to the
+# WORKDIR. Use only if running with the SCRIPT or COMMAND options. If empty,
+# outputs to console.
+OUTPUT_FILES=
+# PostgreSQL user UID and GID. Defaults to 0 and 0.
+POSTGRESUSERID=1000
+POSTGRESGROUPID=1000
 
 
 
@@ -58,37 +67,50 @@ OUTPUT_FILES=false
 
 # ---
 
-echo -------------
-echo WORKING AT $(mlkcontext)
-echo -------------
+# Check mlkctxt is present at the system
+if command -v mlkctxt &> /dev/null ; then
 
-# Check mlkcontext
-if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
+  if ! mlkctxt -c $MATCH_MLKCTXT ; then exit 1 ; fi
 
-  if [ ! "$(mlkcontext)" = "$MATCH_MLKCONTEXT" ] ; then
+fi
 
-    echo Please initialise context $MATCH_MLKCONTEXT
+# Manage identifier
+if [ ! -z "${ID_ROOT}" ] ; then
 
-    exit 1
+  N="${ID_ROOT}_$(mlkctxt)"
+  CONTAINER_HOST_NAME_F="--hostname ${N}"
+
+  if [ "${UNIQUE}" = false ] ; then
+
+    CONTAINER_NAME_F="--name ${N}_$(uuidgen)"
+
+  else
+
+    CONTAINER_NAME_F="--name ${N}"
 
   fi
 
 fi
 
-if [ ! -z "${NETWORK}" ] ; then NETWORK="--network=${NETWORK}" ; fi
+# Network
+if [ ! -z "${NETWORK}" ]; then NETWORK="--network=${NETWORK}" ; fi
 
-if [ ! -z "${CONTAINER_NAME}" ] ; then
+# Env vars
+ENV_VARS_F=
 
-  CONTAINER_NAME="--name=${CONTAINER_NAME}"
+if [ ! -z "${ENV_VARS}" ] ; then
+
+  for E in "${ENV_VARS[@]}" ; do
+
+    ARR_E=(${E//=/ })
+
+    ENV_VARS_F="${ENV_VARS_F} -e \"${ARR_E[0]}=${ARR_E[1]}\" "
+
+  done
 
 fi
 
-if [ ! -z "${CONTAINER_HOST_NAME}" ] ; then
-
-  CONTAINER_HOST_NAME="--hostname=${CONTAINER_HOST_NAME}"
-
-fi
-
+# Volumes
 VOLUMES_F=
 
 if [ ! -z "${VOLUMES}" ] ; then
@@ -101,40 +123,79 @@ if [ ! -z "${VOLUMES}" ] ; then
 
 fi
 
-if [ ! -z "${SCRIPT}" ] ; then
+# Docker tag
+PG_DOCKER_TAG_F=latest
+if [ ! -z "${PG_DOCKER_TAG}" ] ; then PG_DOCKER_TAG_F=$PG_DOCKER_TAG ; fi
 
-  SCRIPT="-f ${SCRIPT}"
+# Host
+HOST_F=localhost
+if [ ! -z "${HOST}" ] ; then HOST_F=$HOST ; fi
 
-fi
+# Port
+PORT_F=5432
+if [ ! -z "${PORT}" ] ; then PORT_F=$PORT ; fi
 
-if [ ! -z "${COMMAND}" ] ; then
+# User
+USER_F=postgres
+if [ ! -z "${USER}" ] ; then USER_F=$USER ; fi
 
-  COMMAND="-c \\\"${COMMAND}\\\""
+# Password
+PASS_F=postgres
+if [ ! -z "${PASS}" ] ; then PASS_F=$PASS ; fi
 
-fi
+# DB
+DB_F=postgres
+if [ ! -z "${DB}" ] ; then DB_F=$DB ; fi
 
-if [ ! -z "${WORKDIR}" ] ; then
+# Script
+if [ ! -z "${SCRIPT}" ] ; then SCRIPT="-f ${SCRIPT}" ; fi
 
-  WORKDIR="--workdir ${WORKDIR}"
+# Command
+if [ ! -z "${COMMAND}" ] ; then COMMAND="-c \"${COMMAND}\"" ; fi
 
-fi
+# Workdir
+WORKDIR_F="--workdir /"
+if [ ! -z "${WORKDIR}" ] ; then WORKDIR_F="--workdir ${WORKDIR}" ; fi
 
-if [ "$OUTPUT_FILES" == "true" ] ; then
+# UID
+POSTGRESUSERID_F=0
+if [ ! -z "${POSTGRESUSERID}" ] ; then POSTGRESUSERID_F=$POSTGRESUSERID ; fi
 
-  OUTPUT_FILES=" 1>out.txt 2>error.txt"
+# GID
+POSTGRESGROUPID_F=0
+if [ ! -z "${POSTGRESGROUPID}" ] ; then POSTGRESGROUPID_F=$POSTGRESGROUPID ; fi
+
+# Output files
+OUTPUT_FILES_F=""
+
+if [ ! -z "$OUTPUT_FILES" ] ; then
+
+  OUTPUT_FILES_F=" 1>${OUTPUT_FILES}_out.txt 2>${OUTPUT_FILES}_error.txt"
 
 else
 
-  OUTPUT_FILES=""
+  OUTPUT_FILES_F=""
 
 fi
 
-eval    docker run -ti --rm \
+eval   docker run -ti --rm \
           $NETWORK \
-          $CONTAINER_NAME \
-          $CONTAINER_HOST_NAME \
+          $CONTAINER_NAME_F \
+          $CONTAINER_HOST_NAME_F \
           $VOLUMES_F \
-          $WORKDIR \
+          $ENV_VARS_F \
+          $WORKDIR_F \
+          -v $(pwd)/../../:$(pwd)/../../ \
+          -e \""POSTGRESUSERID=${POSTGRESUSERID_F}\"" \
+          -e \""POSTGRESGROUPID=${POSTGRESGROUPID_F}\"" \
+          -e \""PASS_F=${PASS_F}\"" \
+          -e \""HOST_F=${HOST_F}\"" \
+          -e \""PORT_F=${PORT_F}\"" \
+          -e \""USER_F=${USER_F}\"" \
+          -e \""DB_F=${DB_F}\"" \
+          -e \""SCRIPT=${SCRIPT}\"" \
+          -e \""COMMAND=${COMMAND}\"" \
+          -e \""OUTPUT_FILES_F=${OUTPUT_FILES_F}\"" \
           --entrypoint /bin/bash \
-          malkab/postgis:$POSTGIS_DOCKER_TAG \
-          -c "\"PGPASSWORD=${PASS} psql -h ${HOST} -p ${PORT} -U ${USER} ${DB} ${SCRIPT} ${COMMAND} ${OUTPUT_FILES}\""
+          malkab/postgis:$PG_DOCKER_TAG_F \
+          -c "run_psql.sh"

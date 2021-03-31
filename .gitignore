@@ -3,4 +3,5 @@ docker_persistent_volumes/*
 # Added by mlkcontext
 # -------------------
 docker/config/postgis/postgresql.conf
-src/scripts/007-additional_permissions.sql
+# Added by mlkctxt - v1.1.4
+# -------------------

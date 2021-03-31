@@ -5,11 +5,9 @@ windows:
   - psql: >
       clear ;
       sleep 2 ;
-      . mlkcontext common ;
       cd docker
 
   - postgis: >
       clear ;
       sleep 0.1 ;
-      . mlkcontext common ;
       cd docker
