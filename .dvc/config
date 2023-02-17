@@ -1,7 +1,0 @@
-[core]
-    remote = storage
-[cache]
-    local = storage
-    slow_link_warning = false
-['remote "storage"']
-    url = /mnt/samsung_hdd_1_5tb/dvc_storage/malkab-phd-data/malkab-phd-data-proyecto_nacional_data
