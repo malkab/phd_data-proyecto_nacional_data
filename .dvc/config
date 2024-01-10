@@ -1,0 +1,7 @@
+[core]
+    remote = origin
+    autostage = true
+[cache]
+    dir = /home/malkab/ragnarok/dvc/phd_data/phd_data-proyecto_nacional_data
+['remote "origin"']
+    url = /home/malkab/ragnarok/dvc/phd_data/phd_data-proyecto_nacional_data

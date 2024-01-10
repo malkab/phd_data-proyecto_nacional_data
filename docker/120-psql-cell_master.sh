@@ -42,11 +42,11 @@ HOST=$MLKC_PROYECTO_NACIONAL_DATA_PG_HOST
 # The port, defaults to 5432.
 PORT=$MLKC_PROYECTO_NACIONAL_DATA_PG_PORT
 # The user, defaults to postgres.
-USER=postgres
+USER=cell_master
 # The pass, defaults to postgres.
-PASS=$MLKC_PROYECTO_NACIONAL_DATA_PG_PASS
+PASS=$MLKC_PROYECTO_NACIONAL_DATA_PG_PASS_CELL_MASTER
 # The DB, defaults to postgres.
-DB=postgres
+DB=datos_finales_proyecto_nacional
 # Declare volumes, a line per volume, complete in source:destination form. No
 # strings needed, $(pwd)/../data/:/ext_src/ works perfectly. Defaults to ().
 VOLUMES=(
